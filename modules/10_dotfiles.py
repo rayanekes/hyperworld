@@ -148,6 +148,44 @@ style = "bold magenta"
 """)
         print("  ✓ Starship configuré")
 
+def deploy_zshrc():
+    print("\n  ── .zshrc HYPERWORLD ──")
+    src = REPO_ROOT / "dotfiles" / "zshrc"
+    dst = HOME / ".zshrc"
+    if src.exists():
+        # Backup de l'ancien .zshrc si existant
+        if dst.exists() and not dst.is_symlink():
+            backup = HOME / ".zshrc.backup"
+            dst.rename(backup)
+            print(f"  ✓ Ancien .zshrc sauvegardé → {backup}")
+        symlink(src, dst)
+        print("  ✓ .zshrc HYPERWORLD déployé")
+
+def deploy_wallpapers():
+    print("\n  ── Wallpapers (téléchargement) ──")
+    wallpaper_script = REPO_ROOT / "scripts" / "get-wallpapers.sh"
+    wallpaper_dir    = REPO_ROOT / "dotfiles" / "wallpapers"
+    wallpaper_dir.mkdir(parents=True, exist_ok=True)
+    if wallpaper_script.exists():
+        import subprocess
+        run(f"bash {wallpaper_script}", check=False)
+    else:
+        print("  ⚠ get-wallpapers.sh introuvable")
+
+def deploy_hyprlock():
+    """Lien symlink hyprlock.conf → ~/.config/hypr/hyprlock.conf"""
+    src = REPO_ROOT / "dotfiles" / "hyprland" / "hyprlock.conf"
+    dst = CONFIG / "hypr" / "hyprlock.conf"
+    if src.exists():
+        symlink(src, dst)
+
+def deploy_hypridle():
+    """Lien symlink hypridle.conf → ~/.config/hypr/hypridle.conf"""
+    src = REPO_ROOT / "dotfiles" / "hyprland" / "hypridle.conf"
+    dst = CONFIG / "hypr" / "hypridle.conf"
+    if src.exists():
+        symlink(src, dst)
+
 if __name__ == "__main__":
     print("\n  ═══ MODULE 10 : DÉPLOIEMENT DOTFILES ═══\n")
     deploy_hyprland()
@@ -157,6 +195,10 @@ if __name__ == "__main__":
     deploy_swaync()
     deploy_scripts()
     deploy_axiom()
+    deploy_zshrc()
+    deploy_hyprlock()
+    deploy_hypridle()
     configure_path()
     configure_starship()
+    deploy_wallpapers()
     print("\n  ✓ Tous les dotfiles déployés via symlinks !")
