@@ -1,0 +1,126 @@
+{
+  "position": "top",
+  "height": 44,
+  "margin-top": 8,
+  "margin-left": 14,
+  "margin-right": 14,
+  "layer": "top",
+  "exclusive": true,
+
+  "modules-left": [
+    "custom/world",
+    "custom/sep",
+    "hyprland/workspaces",
+    "custom/sep",
+    "hyprland/window"
+  ],
+
+  "modules-center": [
+    "custom/media"
+  ],
+
+  "modules-right": [
+    "custom/axiom",
+    "custom/sep",
+    "cpu",
+    "memory",
+    "custom/sep",
+    "battery",
+    "custom/sep",
+    "clock",
+    "custom/sep",
+    "tray"
+  ],
+
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "on-click": "activate",
+    "format-icons": {
+      "7": "󰈮",
+      "8": "",
+      "9": "",
+      "active": "󰮯",
+      "default": "󰊠"
+    },
+    "persistent-workspaces": {
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  },
+
+  "hyprland/window": {
+    "format": "{}",
+    "max-length": 50,
+    "separate-outputs": true,
+    "rewrite": {
+      "(.*) — Mozilla Firefox": "  $1",
+      "(.*) - Visual Studio Code": "󰨞 $1",
+      "(.*)": "$1"
+    }
+  },
+
+  "custom/world": {
+    "format": "  DEEP SPACE",
+    "tooltip": false
+  },
+
+  "custom/sep": {
+    "format": "<span alpha='40%'>·</span>",
+    "tooltip": false
+  },
+
+  "custom/axiom": {
+    "exec": "systemctl --user is-active axiom.service 2>/dev/null && echo '⟨ AXIOM ●⟩' || echo '⟨ AXIOM ○⟩'",
+    "interval": 10,
+    "on-click": "~/.local/bin/axiom-launch.sh",
+    "format": "{}",
+    "tooltip-format": "Cliquer pour invoquer AXIOM"
+  },
+
+  "custom/media": {
+    "exec": "playerctl metadata --format '{{emoji(status)}} {{artist}} — {{title}}' 2>/dev/null || echo ''",
+    "interval": 2,
+    "on-click": "playerctl play-pause",
+    "on-scroll-up": "playerctl next",
+    "on-scroll-down": "playerctl previous",
+    "max-length": 55,
+    "format": "{}"
+  },
+
+  "cpu": {
+    "interval": 3,
+    "format": "  {usage}%",
+    "tooltip-format": "CPU {usage}% | {avg_frequency} GHz"
+  },
+
+  "memory": {
+    "interval": 5,
+    "format": "  {used:.1f}G",
+    "tooltip-format": "{used:.1f}G / {total:.1f}G"
+  },
+
+  "battery": {
+    "interval": 30,
+    "format": "{icon}  {capacity}%",
+    "format-charging": "󰂄  {capacity}%",
+    "format-plugged":  "󰚥  {capacity}%",
+    "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+    "states": {
+      "warning": 30,
+      "critical": 15
+    }
+  },
+
+  "clock": {
+    "interval": 1,
+    "format": "  {:%H:%M}",
+    "format-alt": "  {:%A %d %b}",
+    "tooltip-format": "<big>{:%Y}</big>\n<tt>{calendar}</tt>"
+  },
+
+  "tray": {
+    "spacing": 8,
+    "icon-size": 16
+  }
+}

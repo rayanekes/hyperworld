@@ -1,0 +1,123 @@
+{
+  "position": "bottom",
+  "height": 42,
+  "margin-bottom": 8,
+  "margin-left": 12,
+  "margin-right": 12,
+  "layer": "top",
+  "exclusive": true,
+  "passthrough": false,
+
+  "modules-left": [
+    "custom/world",
+    "hyprland/workspaces",
+    "custom/separator",
+    "hyprland/window"
+  ],
+
+  "modules-center": [
+    "custom/media"
+  ],
+
+  "modules-right": [
+    "custom/gpu-temp",
+    "custom/separator",
+    "cpu",
+    "custom/separator",
+    "memory",
+    "custom/separator",
+    "temperature",
+    "custom/separator",
+    "clock",
+    "custom/separator",
+    "tray"
+  ],
+
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "on-click": "activate",
+    "on-scroll-up": "hyprctl dispatch workspace e+1",
+    "on-scroll-down": "hyprctl dispatch workspace e-1",
+    "format-icons": {
+      "1": "⬡",
+      "2": "⬡",
+      "3": "⬡",
+      "active": "⬢",
+      "default": "⬡"
+    },
+    "persistent-workspaces": {
+      "1": [],
+      "2": [],
+      "3": []
+    }
+  },
+
+  "hyprland/window": {
+    "format": "  {}",
+    "max-length": 40,
+    "separate-outputs": true,
+    "rewrite": {
+      "(.*) — Mozilla Firefox": "  $1",
+      "(.*) - Visual Studio Code": "󰨞  $1",
+      "(.*)": "$1"
+    }
+  },
+
+  "custom/world": {
+    "format": "🎮 GAMING",
+    "tooltip": false
+  },
+
+  "custom/separator": {
+    "format": "<span color='#7B2FFF'>│</span>",
+    "tooltip": false
+  },
+
+  "custom/gpu-temp": {
+    "exec": "nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits 2>/dev/null | awk '{print \"  \" $1 \"°\"}'",
+    "interval": 3,
+    "format": "{}",
+    "tooltip": false
+  },
+
+  "cpu": {
+    "interval": 3,
+    "format": "  {usage}%",
+    "tooltip-format": "CPU: {usage}% | Fréquence: {avg_frequency} GHz"
+  },
+
+  "memory": {
+    "interval": 5,
+    "format": "  {used:.1f}G",
+    "tooltip-format": "RAM: {used:.1f}G / {total:.1f}G ({percentage}%)"
+  },
+
+  "temperature": {
+    "hwmon-path": "/sys/class/hwmon/hwmon0/temp1_input",
+    "critical-threshold": 90,
+    "format": "  {temperatureC}°C",
+    "format-critical": "  {temperatureC}°C"
+  },
+
+  "clock": {
+    "interval": 1,
+    "format": "  {:%H:%M:%S}",
+    "format-alt": "  {:%A %d %B %Y}",
+    "tooltip-format": "<big>{:%Y}</big>\n<tt><small>{calendar}</small></tt>"
+  },
+
+  "custom/media": {
+    "exec": "playerctl metadata --format '{{emoji(status)}} {{artist}} — {{title}}' 2>/dev/null | head -c 60",
+    "interval": 2,
+    "on-click": "playerctl play-pause",
+    "on-scroll-up": "playerctl next",
+    "on-scroll-down": "playerctl previous",
+    "format": "{}",
+    "escape": true
+  },
+
+  "tray": {
+    "spacing": 8,
+    "icon-size": 16
+  }
+}

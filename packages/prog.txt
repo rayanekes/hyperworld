@@ -1,0 +1,70 @@
+# ════════════════════════════════════════════════════
+#  HYPERWORLD — Paquets Monde Prog/Embedded/AI
+# ════════════════════════════════════════════════════
+
+# ── IDEs & Éditeurs ───────────────────────────────
+# code (AUR: visual-studio-code-bin)
+neovim
+vim
+
+# ── Développement Python ──────────────────────────
+python
+python-pip
+python-virtualenv
+python-numpy
+python-scipy
+jupyterlab
+
+# ── Node.js ───────────────────────────────────────
+nodejs
+npm
+
+# ── Docker ────────────────────────────────────────
+docker
+docker-compose
+
+# ── Git & Versioning ──────────────────────────────
+git
+lazygit
+github-cli
+
+# ── Embarqué & Microcontrôleurs ───────────────────
+arduino
+avrdude
+minicom
+picocom
+openocd
+arm-none-eabi-gcc
+arm-none-eabi-newlib
+
+# ── Build tools ───────────────────────────────────
+cmake
+make
+ninja
+clang
+llvm
+
+# ── Serial / USB ──────────────────────────────────
+usbutils
+screen
+
+# ── Databases ─────────────────────────────────────
+sqlite
+postgresql
+redis
+
+# ── CUDA (AI/ML accéléré GPU) ─────────────────────
+cuda
+cudnn
+python-pytorch-cuda
+
+# ── AUR (installés via paru) ──────────────────────
+# visual-studio-code-bin
+# arduino-ide-bin
+# postman-bin
+# bruno-bin
+# dbeaver
+
+# ── Flatpak ───────────────────────────────────────
+# com.spotify.Client
+# com.discordapp.Discord

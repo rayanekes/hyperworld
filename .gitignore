@@ -1,0 +1,12 @@
+state.json
+install.log
+*.log
+*.pyc
+__pycache__/
+.env
+*.gguf
+*.bin
+*.onnx
+*.onnx.json
+dotfiles/wallpapers/
+.DS_Store

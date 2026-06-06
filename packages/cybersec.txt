@@ -1,0 +1,69 @@
+# ════════════════════════════════════════════════════
+#  HYPERWORLD — Paquets Monde Cybersécurité
+# ════════════════════════════════════════════════════
+
+# ── Réseau & Analyse ──────────────────────────────
+wireshark-qt
+tshark
+nmap
+aircrack-ng
+tcpdump
+masscan
+netdiscover
+arp-scan
+openbsd-netcat
+socat
+traceroute
+whois
+dnsutils
+
+# ── Cracking & Auth ───────────────────────────────
+hydra
+john
+hashcat
+crunch
+
+# ── Reverse Engineering ───────────────────────────
+gdb
+radare2
+binwalk
+ltrace
+strace
+xxd
+strings
+
+# ── Web & Exploitation ────────────────────────────
+sqlmap
+nikto
+gobuster
+
+# ── OSINT ─────────────────────────────────────────
+theharvester
+recon-ng
+
+# ── Anonymat ──────────────────────────────────────
+tor
+torsocks
+proxychains-ng
+
+# ── Monitoring ────────────────────────────────────
+nethogs
+iftop
+nload
+bandwhich
+
+# ── AUR (installés via paru) ──────────────────────
+# ghidra
+# burpsuite
+# metasploit
+# pwndbg
+# pwntools (pip)
+# exploitdb (searchsploit)
+# kismet
+# bettercap
+# tor-browser
+
+# ── Python tools (pip) ────────────────────────────
+# scapy
+# impacket
+# pwntools

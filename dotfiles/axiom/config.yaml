@@ -1,0 +1,147 @@
+# ══════════════════════════════════════════════════════════
+#  HYPERWORLD — AXIOM config.yaml
+#  Configuration complète de l'assistant IA
+# ══════════════════════════════════════════════════════════
+
+# ── Identité ───────────────────────────────────────────────
+identity:
+  name: "AXIOM"
+  version: "1.0"
+  owner: "Rayane"
+  language: "fr"
+
+# ── Modèle LLM ─────────────────────────────────────────────
+llm:
+  backend: "llama_cpp"
+  model_path: "~/.axiom/models/gemma-3-2b-instruct-Q4_K_M.gguf"
+  context_length: 8192
+  n_gpu_layers: -1          # Tout sur RTX 4050
+  n_threads: 8              # i7-12700H (8 P-cores)
+  temperature: 0.72
+  top_p: 0.95
+  top_k: 40
+  repeat_penalty: 1.1
+  max_tokens: 1024
+  stop_tokens:
+    - "<end_of_turn>"
+    - "<eos>"
+    - "Rayane:"
+
+# ── STT — Reconnaissance vocale ────────────────────────────
+stt:
+  backend: "whisper_cpp"
+  model_path: "~/.axiom/whisper/ggml-medium.bin"
+  language: "fr"
+  sample_rate: 16000
+  silence_threshold: 0.02
+  silence_duration: 1.2      # secondes de silence = fin de phrase
+  max_record_seconds: 30
+  vad_enabled: true
+  wake_word: "axiom"         # mot-clé d'activation (optionnel)
+
+# ── TTS — Synthèse vocale ──────────────────────────────────
+tts:
+  backend: "piper"
+  model_path: "~/.axiom/piper/fr_FR-upmc-medium.onnx"
+  config_path: "~/.axiom/piper/fr_FR-upmc-medium.onnx.json"
+  speed: 1.05                # légèrement plus rapide que défaut
+  pitch: 0.98
+  output_device: "default"
+
+# ── RAG — Mémoire vectorielle ──────────────────────────────
+rag:
+  backend: "chromadb"
+  db_path: "~/.axiom/rag"
+  collection: "axiom_memory"
+  n_results: 5               # nb de souvenirs récupérés par requête
+  embedding_model: "all-MiniLM-L6-v2"  # léger, rapide
+  index_paths:               # dossiers indexés dans la mémoire
+    - "~/hyperworld"
+    - "~/P4 projetcts$"
+    - "~/.axiom/logs"
+  index_extensions:
+    - ".py"
+    - ".c"
+    - ".h"
+    - ".cpp"
+    - ".js"
+    - ".jsx"
+    - ".ts"
+    - ".md"
+    - ".txt"
+    - ".yaml"
+    - ".json"
+    - ".conf"
+  auto_index: true           # indexation automatique en arrière-plan
+  index_on_change: true      # re-indexe si un fichier change
+
+# ── Exécution système ──────────────────────────────────────
+executor:
+  enabled: true
+  require_confirmation: true  # demande confirmation avant d'exécuter
+  auto_confirm_safe: true     # confirme auto les cmds non-destructives
+  timeout_seconds: 30
+  forbidden_patterns:
+    - "rm -rf /"
+    - "rm -rf /*"
+    - "mkfs"
+    - "dd if=/dev/zero of=/dev"
+    - "dd if=/dev/urandom of=/dev"
+    - "> /dev/sd"
+    - "chmod -R 777 /"
+    - ":(){ :|:& };"
+  sensitive_patterns:          # demande confirmation double
+    - "sudo rm"
+    - "rm -rf"
+    - "pacman -R"
+    - "pacman -Rns"
+    - "systemctl stop"
+    - "systemctl disable"
+    - "shutdown"
+    - "reboot"
+
+# ── Activation ─────────────────────────────────────────────
+activation:
+  hotkey: "Super+A"
+  wake_word_enabled: false   # désactivé par défaut (CPU)
+  auto_start_on_power: true  # démarre quand branché secteur
+  idle_timeout_minutes: 30   # s'endort si inactif
+  startup_message: true
+  startup_greeting: "Salut Rayane ! Je suis là."
+
+# ── Interface ──────────────────────────────────────────────
+ui:
+  mode: "terminal"           # terminal | overlay | both
+  terminal_class: "axiom-terminal"
+  terminal_command: "kitty --class axiom-terminal"
+  history_display: 12        # messages affichés dans l'historique
+  show_thinking: false       # masque les tokens de réflexion
+
+# ── Hyprland intégration ───────────────────────────────────
+hyprland:
+  enabled: true
+  socket_path: "/tmp/hypr"
+  events_pipe: "/tmp/axiom-events"
+  can_switch_worlds: true
+  can_control_windows: true
+  can_run_scripts: true
+
+# ── Logging ────────────────────────────────────────────────
+logging:
+  enabled: true
+  log_dir: "~/.axiom/logs"
+  log_conversations: true
+  log_commands: true
+  max_log_days: 90
+  format: "jsonl"
+
+# ── Spotify integration ────────────────────────────────────
+spotify:
+  enabled: true
+  control_via: "playerctl"
+  commands:
+    play_pause: "playerctl play-pause"
+    next: "playerctl next"
+    previous: "playerctl previous"
+    volume_up: "pactl set-sink-volume @DEFAULT_SINK@ +10%"
+    volume_down: "pactl set-sink-volume @DEFAULT_SINK@ -10%"

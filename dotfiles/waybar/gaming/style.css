@@ -1,0 +1,167 @@
+/* ═══════════════════════════════════════════════════════════
+   HYPERWORLD — Waybar Gaming "CIRCUIT NOIR"
+   Palette: Magenta #FF006E | Cyan #00F5FF | Purple #7B2FFF
+   Style: HUD cyberpunk, bottom bar
+   ═══════════════════════════════════════════════════════════ */
+
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500&display=swap");
+
+* {
+  font-family: "JetBrains Mono", "Hack Nerd Font", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+window#waybar {
+  background: rgba(8, 0, 16, 0.88);
+  border-top: 1px solid rgba(0, 245, 255, 0.25);
+  border-radius: 16px;
+  color: #00F5FF;
+}
+
+/* ── Fond général ── */
+.modules-left,
+.modules-center,
+.modules-right {
+  background: transparent;
+}
+
+/* ── Monde label ── */
+#custom-world {
+  color: #FF006E;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: 2px;
+  padding: 0 14px 0 16px;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px rgba(255, 0, 110, 0.8);
+  animation: pulse-magenta 3s ease-in-out infinite;
+}
+
+@keyframes pulse-magenta {
+  0%, 100% { text-shadow: 0 0 8px rgba(255, 0, 110, 0.6); }
+  50%       { text-shadow: 0 0 20px rgba(255, 0, 110, 1.0), 0 0 40px rgba(255, 0, 110, 0.4); }
+}
+
+/* ── Workspaces ── */
+#workspaces {
+  padding: 0 6px;
+}
+
+#workspaces button {
+  color: rgba(0, 245, 255, 0.35);
+  font-size: 18px;
+  padding: 0 5px;
+  background: transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 28px;
+}
+
+#workspaces button:hover {
+  color: rgba(0, 245, 255, 0.7);
+  background: rgba(0, 245, 255, 0.06);
+  border-radius: 8px;
+}
+
+#workspaces button.active {
+  color: #00F5FF;
+  text-shadow: 0 0 10px rgba(0, 245, 255, 0.9);
+  font-size: 20px;
+}
+
+#workspaces button.urgent {
+  color: #FF006E;
+  animation: blink 0.5s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ── Séparateur ── */
+#custom-separator {
+  font-size: 14px;
+  padding: 0 4px;
+  opacity: 0.4;
+}
+
+/* ── Titre fenêtre ── */
+#window {
+  color: rgba(0, 245, 255, 0.65);
+  font-size: 12px;
+  padding: 0 8px;
+  font-style: italic;
+}
+
+/* ── Média (centre) ── */
+#custom-media {
+  color: rgba(123, 47, 255, 0.9);
+  font-size: 12px;
+  padding: 0 16px;
+  background: rgba(123, 47, 255, 0.08);
+  border-radius: 20px;
+  border: 1px solid rgba(123, 47, 255, 0.2);
+  min-width: 180px;
+  text-align: center;
+}
+
+/* ── GPU Temp ── */
+#custom-gpu-temp {
+  color: #FF006E;
+  padding: 0 8px;
+  text-shadow: 0 0 6px rgba(255, 0, 110, 0.5);
+}
+
+/* ── CPU ── */
+#cpu {
+  color: #00F5FF;
+  padding: 0 8px;
+}
+
+#cpu.warning  { color: #FFB347; }
+#cpu.critical { color: #FF006E; animation: blink 1s infinite; }
+
+/* ── RAM ── */
+#memory {
+  color: #7B2FFF;
+  padding: 0 8px;
+}
+
+/* ── Température ── */
+#temperature {
+  color: #00F5FF;
+  padding: 0 8px;
+}
+
+#temperature.critical {
+  color: #FF006E;
+  text-shadow: 0 0 8px rgba(255, 0, 110, 0.8);
+}
+
+/* ── Horloge ── */
+#clock {
+  color: #00F5FF;
+  font-family: "Orbitron", monospace;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 0 14px 0 8px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px rgba(0, 245, 255, 0.6);
+}
+
+/* ── Tray ── */
+#tray {
+  padding: 0 10px;
+  margin-right: 4px;
+}
+
+#tray > .passive { -gtk-icon-effect: dim; }
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  background-color: rgba(255, 0, 110, 0.3);
+  border-radius: 8px;
+}

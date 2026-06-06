@@ -1,0 +1,151 @@
+/* ═══════════════════════════════════════════════════════════
+   HYPERWORLD — Rofi Global Overview (touche Super)
+   Affiche TOUTES les apps de TOUS les mondes
+   Style: premium, glassmorphism, non classique
+   ═══════════════════════════════════════════════════════════ */
+
+* {
+  bg:          rgba(8, 4, 22, 0.92);
+  bg-alt:      rgba(20, 10, 45, 0.85);
+  bg-hover:    rgba(123, 47, 255, 0.15);
+  bg-selected: rgba(123, 47, 255, 0.25);
+  fg:          #CDD9E5;
+  fg-dim:      rgba(205, 217, 229, 0.45);
+  accent:      #A78BFA;
+  accent2:     #2DD4BF;
+  border-col:  rgba(167, 139, 250, 0.2);
+
+  font:        "JetBrains Mono 12";
+  background-color: transparent;
+  text-color:  @fg;
+  border:      0;
+  margin:      0;
+  padding:     0;
+  spacing:     0;
+}
+
+window {
+  background-color: @bg;
+  border:           1px solid @border-col;
+  border-radius:    18px;
+  padding:          0;
+  width:            680px;
+  location:         center;
+  anchor:           center;
+  x-offset:        0;
+  y-offset:        0;
+}
+
+mainbox {
+  background-color: transparent;
+  children: [inputbar, message, listview];
+  spacing:  0;
+  padding:  0;
+}
+
+/* ── Barre de recherche ── */
+inputbar {
+  background-color: rgba(167, 139, 250, 0.07);
+  border-bottom:    1px solid @border-col;
+  border-radius:    18px 18px 0 0;
+  padding:          14px 20px;
+  spacing:          10px;
+  children:         [prompt, entry];
+}
+
+prompt {
+  background-color: transparent;
+  text-color:       @accent;
+  font:             "JetBrains Mono 13";
+  vertical-align:   0.5;
+}
+
+entry {
+  background-color: transparent;
+  text-color:       @fg;
+  placeholder-color: @fg-dim;
+  placeholder:      "Rechercher une app...";
+  font:             "Inter 13";
+  vertical-align:   0.5;
+  cursor:           text;
+}
+
+/* ── Message (groupes de mondes) ── */
+message {
+  background-color: rgba(20, 10, 45, 0.6);
+  padding:          6px 20px;
+  border-bottom:    1px solid @border-col;
+}
+
+textbox {
+  background-color: transparent;
+  text-color:       @fg-dim;
+  font:             "JetBrains Mono 10";
+}
+
+/* ── Liste ── */
+listview {
+  background-color: transparent;
+  padding:          8px 8px;
+  spacing:          2px;
+  lines:            12;
+  columns:          1;
+  scrollbar:        false;
+  border-radius:    0 0 18px 18px;
+}
+
+element {
+  background-color: transparent;
+  border-radius:    10px;
+  padding:          10px 14px;
+  spacing:          10px;
+  children:         [element-icon, element-text];
+  orientation:      horizontal;
+  cursor:           pointer;
+  transition:       background-color 0.15s ease;
+}
+
+element:hover {
+  background-color: @bg-hover;
+}
+
+element.selected {
+  background-color: @bg-selected;
+}
+
+element-icon {
+  size:   22px;
+  margin: 0 4px 0 0;
+  vertical-align: 0.5;
+}
+
+element-text {
+  background-color: transparent;
+  text-color:       @fg;
+  font:             "JetBrains Mono 12";
+  vertical-align:   0.5;
+  highlight:        bold @accent;
+}
+
+element.selected > element-text {
+  text-color: @accent;
+}
+
+/* Groupes monde (préfixes) */
+element-text[value*="🎮"] {
+  text-color: #FF006E;
+}
+element-text[value*="🛡️"] {
+  text-color: #00FF41;
+}
+element-text[value*="🔬"] {
+  text-color: #A78BFA;
+}
+
+/* ── Scrollbar (cachée mais fonctionnelle) ── */
+scrollbar {
+  background-color: transparent;
+  handle-color:     @border-col;
+  handle-width:     3px;
+  border:           0;
+}

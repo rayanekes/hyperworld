@@ -1,0 +1,166 @@
+/* ═══════════════════════════════════════════════════════════
+   HYPERWORLD — Waybar Prog "DEEP SPACE IDE"
+   Palette: Bleu #1E3A5F | Orange #FF8C42 | Lavande #A78BFA
+            Teal #2DD4BF | Fond #0D1117
+   Style: Élégant, premium, non intrusif, glassmorphism
+   ═══════════════════════════════════════════════════════════ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
+
+* {
+  font-family: "Inter", "JetBrains Mono Nerd Font", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+window#waybar {
+  background: rgba(13, 17, 23, 0.82);
+  border: 1px solid rgba(167, 139, 250, 0.12);
+  border-radius: 14px;
+  color: #CDD9E5;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* ── World label ── */
+#custom-world {
+  color: #A78BFA;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  padding: 0 14px 0 18px;
+  text-transform: uppercase;
+}
+
+/* ── Séparateur ── */
+#custom-sep {
+  color: rgba(167, 139, 250, 0.2);
+  padding: 0 6px;
+  font-size: 16px;
+}
+
+/* ── Workspaces ── */
+#workspaces {
+  padding: 0 4px;
+}
+
+#workspaces button {
+  color: rgba(205, 217, 229, 0.3);
+  font-size: 16px;
+  padding: 0 6px;
+  background: transparent;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 8px;
+}
+
+#workspaces button:hover {
+  color: rgba(167, 139, 250, 0.8);
+  background: rgba(167, 139, 250, 0.08);
+}
+
+#workspaces button.active {
+  color: #A78BFA;
+  background: rgba(167, 139, 250, 0.12);
+  border-radius: 8px;
+  font-size: 17px;
+}
+
+/* ── Titre fenêtre ── */
+#window {
+  color: rgba(205, 217, 229, 0.55);
+  font-size: 12px;
+  font-weight: 300;
+  padding: 0 10px;
+  font-style: italic;
+}
+
+/* ── AXIOM Status ── */
+#custom-axiom {
+  color: #2DD4BF;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 12px;
+  background: rgba(45, 212, 191, 0.08);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  border-radius: 20px;
+  margin: 6px 4px;
+  transition: all 0.2s ease;
+}
+
+#custom-axiom:hover {
+  background: rgba(45, 212, 191, 0.15);
+  border-color: rgba(45, 212, 191, 0.4);
+  cursor: pointer;
+}
+
+/* ── Média (Spotify) ── */
+#custom-media {
+  color: #2DD4BF;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 2px 16px;
+  background: rgba(45, 212, 191, 0.06);
+  border-radius: 20px;
+  max-width: 400px;
+}
+
+/* ── CPU ── */
+#cpu {
+  color: rgba(205, 217, 229, 0.7);
+  padding: 0 6px;
+  font-size: 12px;
+}
+
+#cpu.warning  { color: #FF8C42; }
+#cpu.critical { color: #FF4444; }
+
+/* ── RAM ── */
+#memory {
+  color: rgba(205, 217, 229, 0.6);
+  padding: 0 6px;
+  font-size: 12px;
+}
+
+/* ── Batterie ── */
+#battery {
+  color: #2DD4BF;
+  font-size: 13px;
+  padding: 0 8px;
+  font-weight: 500;
+}
+
+#battery.warning  { color: #FF8C42; }
+#battery.critical {
+  color: #FF4444;
+  animation: critical-pulse 1s ease-in-out infinite;
+}
+
+#battery.charging, #battery.plugged {
+  color: #A78BFA;
+}
+
+@keyframes critical-pulse {
+  50% { opacity: 0.5; }
+}
+
+/* ── Horloge ── */
+#clock {
+  color: #CDD9E5;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 0 10px 0 6px;
+}
+
+/* ── Tray ── */
+#tray {
+  padding: 0 12px 0 4px;
+}
+
+#tray > .passive { -gtk-icon-effect: dim; }
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  background-color: rgba(255, 140, 66, 0.2);
+  border-radius: 8px;
+}

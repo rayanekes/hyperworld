@@ -1,0 +1,96 @@
+# ════════════════════════════════════════════════════
+#  HYPERWORLD — Paquets Base Système (ARCH ESSENTIELS)
+#  Tout ce qui est ici = système ne démarre pas sans
+# ════════════════════════════════════════════════════
+
+# ── Noyau & Compilateurs ──────────────────────────
+base
+base-devel
+linux-zen
+linux-zen-headers
+linux-firmware
+dkms
+
+# ── Outils essentiels CLI ─────────────────────────
+git
+wget
+curl
+openssh
+sudo
+nano
+vim
+man-db
+man-pages
+man-pages-fr
+bash-completion
+zip
+unzip
+tar
+p7zip
+rsync
+tree
+which
+file
+
+# ── Stockage & Systèmes de fichiers ───────────────
+ntfs-3g
+exfatprogs
+dosfstools
+e2fsprogs
+btrfs-progs
+lsof
+
+# ── Hardware & Infos système ──────────────────────
+usbutils
+pciutils
+lshw
+dmidecode
+hwinfo
+
+# ── Pacman & AUR ──────────────────────────────────
+reflector
+pacman-contrib
+pkgfile
+
+# ── Réseau ────────────────────────────────────────
+networkmanager
+network-manager-applet
+iwd
+wireless_tools
+net-tools
+nss-mdns
+openbsd-netcat
+
+# ── Bluetooth ─────────────────────────────────────
+bluez
+bluez-utils
+
+# ── Sécurité & Firewall ───────────────────────────
+firewalld
+gnome-keyring
+libsecret
+
+# ── Python (requis pour install.py lui-même) ──────
+python
+python-pip
+
+# ── Gestion énergie ───────────────────────────────
+upower
+power-profiles-daemon
+acpid
+thermald
+cpupower
+
+# ── Firmware ──────────────────────────────────────
+fwupd
+
+# ── Monitoring temp & capteurs ────────────────────
+lm_sensors
+
+# ── Luminosité & contrôle ─────────────────────────
+brightnessctl
+
+# ── Misc ──────────────────────────────────────────
+dialog
+diffutils
+less

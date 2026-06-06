@@ -1,0 +1,158 @@
+/* ═══════════════════════════════════════════════════════════
+   HYPERWORLD — Waybar Cybersec "GHOST PROTOCOL"
+   Palette: Matrix Green #00FF41 | Red #FF3131 | Black #000000
+   Style: Terminal pur, CLI immersif, scanlines
+   ═══════════════════════════════════════════════════════════ */
+
+* {
+  font-family: "Hack Nerd Font", "Hack", "Courier New", monospace;
+  font-size: 12px;
+  font-weight: 400;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+window#waybar {
+  background: rgba(0, 0, 0, 0.95);
+  border-bottom: 1px solid rgba(0, 255, 65, 0.3);
+  color: #00FF41;
+}
+
+/* Effet scanlines subtil sur la bar */
+window#waybar::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.05) 2px,
+    rgba(0, 0, 0, 0.05) 4px
+  );
+  pointer-events: none;
+}
+
+/* ── World label ── */
+#custom-world {
+  color: #00FF41;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 12px 0 14px;
+  letter-spacing: 1px;
+  animation: terminal-blink 2.5s steps(1) infinite;
+}
+
+@keyframes terminal-blink {
+  0%, 94%  { opacity: 1; }
+  95%, 99% { opacity: 0.3; }
+  100%     { opacity: 1; }
+}
+
+/* ── Séparateur ── */
+#custom-separator {
+  color: rgba(0, 255, 65, 0.25);
+  padding: 0 4px;
+}
+
+/* ── IP ── */
+#custom-ip {
+  color: rgba(0, 255, 65, 0.6);
+  font-size: 11px;
+  padding: 0 8px;
+}
+
+/* ── Workspaces ── */
+#workspaces {
+  padding: 0 4px;
+}
+
+#workspaces button {
+  color: rgba(0, 255, 65, 0.3);
+  font-size: 11px;
+  padding: 0 6px;
+  background: transparent;
+  letter-spacing: 1px;
+  transition: color 0.15s;
+}
+
+#workspaces button:hover {
+  color: rgba(0, 255, 65, 0.7);
+  background: rgba(0, 255, 65, 0.05);
+}
+
+#workspaces button.active {
+  color: #00FF41;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.9);
+}
+
+/* ── Horloge centrale (matrix clock) ── */
+#custom-matrix-clock {
+  color: #00FF41;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.8), 0 0 20px rgba(0, 255, 65, 0.3);
+  padding: 0 20px;
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { text-shadow: 0 0 8px rgba(0, 255, 65, 0.6); }
+  50%       { text-shadow: 0 0 16px rgba(0, 255, 65, 1.0), 0 0 32px rgba(0, 255, 65, 0.4); }
+}
+
+/* ── Interface réseau ── */
+#custom-net-iface {
+  color: rgba(0, 255, 65, 0.55);
+  font-size: 11px;
+  padding: 0 8px;
+}
+
+/* ── Réseau (bande passante) ── */
+#network {
+  color: rgba(0, 255, 65, 0.65);
+  font-size: 11px;
+  padding: 0 8px;
+}
+
+#network.disconnected {
+  color: #FF3131;
+  animation: blink-red 1s steps(1) infinite;
+}
+
+@keyframes blink-red {
+  50% { opacity: 0.3; }
+}
+
+/* ── CPU ── */
+#cpu {
+  color: rgba(0, 255, 65, 0.75);
+  font-size: 11px;
+  padding: 0 8px;
+}
+
+#cpu.warning  { color: #FFFF00; }
+#cpu.critical { color: #FF3131; animation: blink-red 0.5s steps(1) infinite; }
+
+/* ── Mémoire ── */
+#memory {
+  color: rgba(0, 255, 65, 0.65);
+  font-size: 11px;
+  padding: 0 8px;
+}
+
+/* ── Date ── */
+#clock {
+  color: rgba(0, 255, 65, 0.5);
+  font-size: 11px;
+  padding: 0 10px;
+}
+
+/* ── Tray ── */
+#tray {
+  padding: 0 10px;
+  filter: sepia(1) saturate(2) hue-rotate(80deg);
+}

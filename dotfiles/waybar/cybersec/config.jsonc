@@ -1,0 +1,108 @@
+{
+  "position": "top",
+  "height": 38,
+  "margin-top": 0,
+  "layer": "top",
+  "exclusive": true,
+
+  "modules-left": [
+    "custom/world",
+    "custom/separator",
+    "hyprland/workspaces",
+    "custom/separator",
+    "custom/ip"
+  ],
+
+  "modules-center": [
+    "custom/matrix-clock"
+  ],
+
+  "modules-right": [
+    "custom/net-iface",
+    "custom/separator",
+    "network",
+    "custom/separator",
+    "cpu",
+    "custom/separator",
+    "memory",
+    "custom/separator",
+    "clock",
+    "tray"
+  ],
+
+  "hyprland/workspaces": {
+    "format": "[{name}]",
+    "on-click": "activate",
+    "format-icons": {
+      "active": "▶",
+      "default": "·"
+    },
+    "persistent-workspaces": {
+      "4": [],
+      "5": [],
+      "6": []
+    }
+  },
+
+  "custom/world": {
+    "format": "root@ghost:~#",
+    "tooltip": false
+  },
+
+  "custom/separator": {
+    "format": "<span color='#003300'>|</span>",
+    "tooltip": false
+  },
+
+  "custom/ip": {
+    "exec": "ip route get 1.1.1.1 2>/dev/null | awk '{print \"IP: \" $7; exit}' | head -1",
+    "interval": 30,
+    "format": "{}",
+    "tooltip": false
+  },
+
+  "custom/matrix-clock": {
+    "exec": "date '+%H:%M:%S UTC%z'",
+    "interval": 1,
+    "format": "[ {} ]",
+    "tooltip": false
+  },
+
+  "custom/net-iface": {
+    "exec": "ip route get 1.1.1.1 2>/dev/null | awk '{print \"if: \" $5; exit}'",
+    "interval": 10,
+    "format": "{}",
+    "tooltip": false
+  },
+
+  "network": {
+    "interval": 3,
+    "format-wifi": "▲{bandwidthUpBytes} ▼{bandwidthDownBytes}",
+    "format-ethernet": "▲{bandwidthUpBytes} ▼{bandwidthDownBytes}",
+    "format-disconnected": "OFFLINE",
+    "tooltip-format": "SSID: {essid}\nStrength: {signaldBm}dBm\nFreq: {frequency}MHz"
+  },
+
+  "cpu": {
+    "interval": 2,
+    "format": "cpu:{usage:02}%",
+    "tooltip": false
+  },
+
+  "memory": {
+    "interval": 5,
+    "format": "mem:{used:.1f}G",
+    "tooltip": false
+  },
+
+  "clock": {
+    "interval": 1,
+    "format": "{:%Y-%m-%d}",
+    "tooltip-format": "{:%A %d %B %Y}"
+  },
+
+  "tray": {
+    "spacing": 6,
+    "icon-size": 14
+  }
+}

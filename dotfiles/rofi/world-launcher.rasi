@@ -1,0 +1,102 @@
+/* ═══════════════════════════════════════════════════════════
+   HYPERWORLD — Rofi World Launcher (Super+Space)
+   Lance les apps du monde actif uniquement
+   Style: adaptatif selon le monde courant (via env var)
+   ═══════════════════════════════════════════════════════════ */
+
+* {
+  bg:          rgba(13, 17, 23, 0.90);
+  bg-hover:    rgba(167, 139, 250, 0.12);
+  bg-selected: rgba(167, 139, 250, 0.20);
+  fg:          #E6EDF3;
+  fg-dim:      rgba(230, 237, 243, 0.4);
+  accent:      #A78BFA;
+  border-col:  rgba(167, 139, 250, 0.18);
+
+  font:             "Inter 13";
+  background-color: transparent;
+  text-color:       @fg;
+  border:           0;
+  margin:           0;
+  padding:          0;
+  spacing:          0;
+}
+
+window {
+  background-color: @bg;
+  border:           1px solid @border-col;
+  border-radius:    14px;
+  width:            500px;
+  location:         center;
+  anchor:           center;
+}
+
+mainbox {
+  background-color: transparent;
+  children: [inputbar, listview];
+  padding:  0;
+}
+
+inputbar {
+  background-color: rgba(167, 139, 250, 0.06);
+  border-bottom:    1px solid @border-col;
+  border-radius:    14px 14px 0 0;
+  padding:          12px 18px;
+  children:         [prompt, entry];
+  spacing:          8px;
+}
+
+prompt {
+  background-color: transparent;
+  text-color:       @accent;
+  font:             "JetBrains Mono 13";
+  vertical-align:   0.5;
+}
+
+entry {
+  background-color: transparent;
+  text-color:       @fg;
+  placeholder-color: @fg-dim;
+  placeholder:      "Lancer une app...";
+  font:             "Inter 13";
+  vertical-align:   0.5;
+}
+
+listview {
+  background-color: transparent;
+  padding:          6px;
+  spacing:          2px;
+  lines:            10;
+  columns:          1;
+  scrollbar:        false;
+  border-radius:    0 0 14px 14px;
+}
+
+element {
+  background-color: transparent;
+  border-radius:    8px;
+  padding:          9px 12px;
+  spacing:          10px;
+  children:         [element-icon, element-text];
+  orientation:      horizontal;
+  cursor:           pointer;
+}
+
+element:hover    { background-color: @bg-hover; }
+element.selected { background-color: @bg-selected; }
+
+element-icon {
+  size:           20px;
+  vertical-align: 0.5;
+}
+
+element-text {
+  background-color: transparent;
+  text-color:       @fg;
+  vertical-align:   0.5;
+  highlight:        bold @accent;
+}
+
+element.selected > element-text {
+  text-color: @accent;
+}

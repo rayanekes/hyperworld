@@ -1,0 +1,40 @@
+{
+  "models": [
+    {
+      "name": "gemma-3-2b-instruct-Q4_K_M.gguf",
+      "url": "https://huggingface.co/bartowski/gemma-3-2b-it-GGUF/resolve/main/gemma-3-2b-it-Q4_K_M.gguf",
+      "fallback_url": "https://huggingface.co/bartowski/gemma-3-2b-it-GGUF",
+      "size_gb": 1.7,
+      "destination": "~/.axiom/models/",
+      "required": true,
+      "description": "LLM principal d'AXIOM — Gemma 3 2B quantisé Q4"
+    },
+    {
+      "name": "ggml-medium.bin",
+      "url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-medium.bin",
+      "fallback_url": "https://huggingface.co/ggerganov/whisper.cpp",
+      "size_gb": 1.5,
+      "destination": "~/.axiom/whisper/",
+      "required": true,
+      "description": "Whisper Medium — reconnaissance vocale hors-ligne"
+    },
+    {
+      "name": "fr_FR-upmc-medium.onnx",
+      "url": "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/fr/fr_FR/upmc/medium/fr_FR-upmc-medium.onnx",
+      "fallback_url": "https://huggingface.co/rhasspy/piper-voices/tree/main/fr/fr_FR/upmc/medium",
+      "size_gb": 0.06,
+      "destination": "~/.axiom/piper/",
+      "required": true,
+      "description": "Piper TTS — voix masculine française"
+    },
+    {
+      "name": "fr_FR-upmc-medium.onnx.json",
+      "url": "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/fr/fr_FR/upmc/medium/fr_FR-upmc-medium.onnx.json",
+      "fallback_url": "https://huggingface.co/rhasspy/piper-voices/tree/main/fr/fr_FR/upmc/medium",
+      "size_gb": 0.001,
+      "destination": "~/.axiom/piper/",
+      "required": true,
+      "description": "Piper TTS — config voix"
+    }
+  ]
+}
