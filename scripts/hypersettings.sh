@@ -72,6 +72,13 @@ add_item "🔑  Gestionnaire de mots de passe"      "keepassxc"
 add_item "🚀  Services au démarrage"              "kitty -e bash -c 'systemctl --user list-unit-files --state=enabled; read'"
 add_item "⏱️  Temps de boot"                     "kitty -e bash -c 'systemd-analyze blame | head -20; read'"
 
+# ── ☁️ Google Drive & Cloud ────────────────────────────────
+add_item "☁️  Google Drive (upload/download)"     "\$HOME/.local/bin/gdrive.sh"
+add_item "🔄  Synchroniser Drive maintenant"       "\$HOME/.local/bin/gdrive.sh sync"
+add_item "📸  Backup Google Photos"                "\$HOME/.local/bin/gdrive.sh photos"
+add_item "📊  État de la connexion Drive"          "\$HOME/.local/bin/gdrive.sh status"
+add_item "⚙️  Configurer compte Google"            "\$HOME/.local/bin/setup-gdrive.sh"
+
 # ── 🌌 HYPERWORLD ───────────────────────────────────────────
 add_item "🌌  Changer de Monde"                   "bash $HOME/.local/bin/world-switch.sh"
 add_item "🔄  Recharger Hyprland"                 "hyprctl reload"

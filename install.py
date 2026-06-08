@@ -36,6 +36,7 @@ MODULES = [
     ("10_dotfiles",       "Déploiement de tous les dotfiles"),
     ("11_finalize",       "Finalisation + services systemd"),
     ("11b_control_center", "Centre de contrôle (Store, Permissions, Paramètres)"),
+    ("11c_cloud",           "Intégration cloud Google Drive + Google Photos"),
 ]
 
 C = {
