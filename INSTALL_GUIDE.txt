@@ -1,0 +1,310 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║          GUIDE D'INSTALLATION — Windows 10 + Arch Linux DUAL BOOT          ║
+║                    ASUS TUF FX507ZU4 — 512 GB NVMe                         ║
+║                    Préparé par HYPERWORLD pour Rayane                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+⚠️  RÈGLE D'OR DU DUAL BOOT : WINDOWS D'ABORD, ARCH ENSUITE.
+    Si tu fais Arch en premier, Windows va écraser le bootloader.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PLAN DU DISQUE FINAL (512 GB NVMe)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  [EFI]  500 MB  ← créé par Windows, réutilisé par GRUB (NE PAS TOUCHER)
+  [MSR]   16 MB  ← Microsoft Reserved, obligatoire Windows (NE PAS TOUCHER)
+  [WIN] ~230 GB  ← Windows 10 NTFS
+  [REC]  500 MB  ← Récupération Windows (NE PAS TOUCHER)
+  [ARC] ~280 GB  ← Arch Linux btrfs  ← tu crées ça pendant archinstall
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PHASE 0 — BIOS (avant tout)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. Au démarrage, appuie sur F2 (ou DEL) pour entrer dans le BIOS ASUS
+  2. Va dans l'onglet "Boot" ou "Security"
+  3. DÉSACTIVE "Secure Boot" ← indispensable pour Arch + Nvidia
+  4. Active "Launch CSM" → NON (garde UEFI pur)
+  5. "Fast Boot" → DÉSACTIVÉ
+  6. "Boot Priority" → met USB en premier
+  7. Sauvegarde et quitte (F10)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PHASE 1 — INSTALLATION WINDOWS 10
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Étape 1 — Boot sur l'ISO Windows depuis Ventoy
+  ─────────────────────────────────────────────
+  · Clique sur "Win10_*.iso" dans Ventoy
+  · Mode UEFI (pas Legacy)
+
+  Étape 2 — Choix de la langue
+  ─────────────────────────────────────────────
+  · Langue : Français (France)
+  · Format horaire : Français
+  · Clavier : Français
+
+  Étape 3 — Type d'installation
+  ─────────────────────────────────────────────
+  · "Installer Windows uniquement (avancé)"  ← PAS "Mise à niveau"
+
+  Étape 4 — Partitionnement (CRITIQUE)
+  ─────────────────────────────────────────────
+  Tu vas voir "Où voulez-vous installer Windows ?"
+  · Si le disque est vide → clique "Nouveau"
+  · Taille : 235000 MB  (= ~230 GB)
+  · Clique "Appliquer"
+  · Windows va créer automatiquement :
+      - Partition 1 : 100 MB EFI System Partition
+      - Partition 2 : 16 MB MSR
+      - Partition 3 : 230 GB Windows (celle que tu viens de créer)
+      - Partition 4 : 500 MB Récupération
+  · LAISSE le reste (~270 GB) NON ALLOUÉ ← Arch ira là
+  · Sélectionne la Partition 3 (230 GB) et clique "Suivant"
+
+  Étape 5 — Installation Windows
+  ─────────────────────────────────────────────
+  · Laisse tourner (~20-30 min, plusieurs redémarrages)
+  · Lors de la configuration initiale :
+      - Compte : crée un compte LOCAL (pas Microsoft)
+      - Nom : Rayane  (ou ce que tu veux)
+
+  Étape 6 — Après Windows installé — ACTIONS CRITIQUES
+  ─────────────────────────────────────────────────────
+  Dans Windows, fais ces 3 choses AVANT d'installer Arch :
+
+  A) Désactiver le Démarrage Rapide (Fast Boot Windows) :
+     → Panneau de configuration
+     → Options d'alimentation
+     → "Choisir l'action du bouton d'alimentation"
+     → "Modifier des paramètres actuellement non disponibles"
+     → DÉCOCHER "Activer le démarrage rapide"
+     → Enregistrer
+     (Si pas fait → Arch ne peut pas lire la partition Windows = corruption)
+
+  B) Désactiver l'hibernation :
+     → Ouvre CMD en administrateur
+     → Tape : powercfg /h off
+     → Entrée
+
+  C) Note le nom de ta partition Windows dans le Gestionnaire de disques :
+     → Clic droit sur le bouton Démarrer → "Gestion des disques"
+     → Note bien : quelle partition est EFI (100MB) et laquelle est Windows
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PHASE 2 — INSTALLATION ARCH LINUX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Étape 1 — Boot Ventoy → Arch Linux ISO
+  ─────────────────────────────────────────────
+  · Redémarre avec la clé Ventoy
+  · Sélectionne "archlinux-*.iso"
+  · Mode : "Normal Mode"
+  · Tu arrives sur root@archiso ~#
+
+  Étape 2 — Connexion WiFi
+  ─────────────────────────────────────────────
+  Tape ces commandes :
+
+      iwctl
+      device list                          ← note le nom (ex: wlan0)
+      station wlan0 scan
+      station wlan0 get-networks
+      station wlan0 connect "NomWiFi"      ← remplace par ton WiFi
+      quit
+
+  Vérification :
+      ping -c 3 archlinux.org
+
+  Étape 3 — Identifier les partitions existantes
+  ─────────────────────────────────────────────
+  Tape :
+      lsblk -f
+
+  Tu vas voir quelque chose comme :
+      nvme0n1
+      ├─nvme0n1p1   vfat   EFI      100M    ← EFI Windows (à réutiliser)
+      ├─nvme0n1p2                     16M    ← MSR Windows
+      ├─nvme0n1p3   ntfs   Windows  230G    ← Windows
+      ├─nvme0n1p4   ntfs   Recovery 500M    ← Récupération Windows
+      └─                            (vide)  ← ESPACE LIBRE pour Arch
+
+  NOTE LES NOMS : probablement nvme0n1p1 pour EFI, et l'espace libre après p4
+
+  Étape 4 — Lancer archinstall
+  ─────────────────────────────────────────────
+      archinstall
+
+  Étape 5 — Réponses dans archinstall (DUAL BOOT)
+  ─────────────────────────────────────────────
+
+  ┌─────────────────────────────────┬──────────────────────────────────────────┐
+  │ Option archinstall              │ Réponse exacte                           │
+  ├─────────────────────────────────┼──────────────────────────────────────────┤
+  │ Archinstall language            │ French                                   │
+  │ Mirrors/Region                  │ France                                   │
+  │ Locales                         │ fr_FR.UTF-8                              │
+  │ Disk configuration              │ *** MANUEL — voir ci-dessous ***         │
+  │ Disk encryption                 │ Skip                                     │
+  │ Bootloader                      │ GRUB  ← OBLIGATOIRE pour dual boot       │
+  │ Unified kernel images           │ No                                       │
+  │ Swap                            │ zram                                     │
+  │ Hostname                        │ hyperworld                               │
+  │ Root password                   │ (choisis un MDP fort)                    │
+  │ User account                    │ rayane  ← EXACTEMENT ce nom              │
+  │ User sudo                       │ OUI ← OBLIGATOIRE                        │
+  │ Profile                         │ Minimal  ← PAS de bureau                 │
+  │ Audio                           │ Pipewire                                 │
+  │ Kernels                         │ linux-zen                                │
+  │ Additional packages             │ git python wget curl os-prober           │
+  │ Network config                  │ NetworkManager                           │
+  │ Timezone                        │ Africa/Algiers                           │
+  │ Automatic time sync (NTP)       │ Yes                                      │
+  └─────────────────────────────────┴──────────────────────────────────────────┘
+
+  *** DISK CONFIGURATION — MANUEL (étape la plus délicate) ***
+  ────────────────────────────────────────────────────────────
+  Dans archinstall, choisis :
+    → "Manual Partitioning"  (PAS "Erase disk" — ça effacerait Windows !)
+    → Sélectionne ton disque : nvme0n1
+
+  Tu vas voir la liste des partitions existantes.
+  Tu dois UNIQUEMENT créer/modifier sur l'ESPACE LIBRE :
+
+  1) Partition EFI existante (nvme0n1p1, 100MB, vfat) :
+     → Clique dessus → "Assign mount point" → /boot/efi
+     → FORMAT : NON  ← NE PAS FORMATER (ça effacerait le bootloader Windows)
+
+  2) Sur l'espace non alloué (~270 GB) :
+     → "Create new partition"
+     → Filesystem : btrfs
+     → Mount point : /
+     → Size : tout l'espace restant
+     → FORMAT : OUI
+
+  3) Confirme et continue.
+
+  Étape 6 — Lancer l'installation
+  ─────────────────────────────────────────────
+  → "Install"
+  → Attends (~15-25 min)
+  → À la fin : "Chroot into system?" → NON
+  → "Reboot?" → NON  (pas encore)
+
+  Étape 7 — Copier le modèle IA avant reboot
+  ─────────────────────────────────────────────
+  La clé Ventoy est encore là. Profite-en :
+
+      # Trouver le point de montage de la clé Ventoy
+      lsblk
+
+      # Cherche la partition Ventoy (sda1 ou sdb1 généralement)
+      # Monte-la si elle n'est pas montée :
+      mount /dev/sda1 /mnt/ventoy 2>/dev/null || mkdir -p /mnt/ventoy
+
+      # Monter Arch (si pas encore monté) :
+      mount /dev/nvme0n1pX /mnt     ← remplace X par le bon numéro (ta partition btrfs)
+
+      # Créer le dossier et copier :
+      mkdir -p /mnt/home/rayane/.axiom/models
+      cp "/mnt/ventoy/mes fichiers/gemma-4-E2B-it-Q4_K_M.gguf" \
+         /mnt/home/rayane/.axiom/models/
+      echo "✓ Modèle copié !"
+
+  Étape 8 — Configurer os-prober (pour que GRUB voit Windows)
+  ─────────────────────────────────────────────────────────────
+      arch-chroot /mnt
+
+      # Dans le chroot :
+      echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/default/grub
+      os-prober
+      grub-mkconfig -o /boot/grub/grub.cfg
+      exit
+
+  Tu dois voir dans la sortie :
+      "Found Windows Boot Manager on /dev/nvme0n1p1"
+  Si oui → GRUB va afficher Windows au démarrage ✓
+
+  Étape 9 — Reboot
+  ─────────────────────────────────────────────
+      reboot
+
+  Retire la clé Ventoy quand l'écran devient noir.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PHASE 3 — PREMIER DÉMARRAGE ARCH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Tu vas voir le menu GRUB avec 2 choix :
+    · Arch Linux
+    · Windows Boot Manager
+
+  → Choisis "Arch Linux"
+
+  Login :
+      login: rayane
+      password: (ton mot de passe)
+
+  Connexion WiFi :
+      nmcli device wifi connect "NomWiFi" password "motdepasse"
+
+  Lancer HYPERWORLD :
+      bash <(curl -fsSL https://raw.githubusercontent.com/rayanekes/hyperworld/main/bootstrap.sh)
+
+  Installation complète : ~1h30
+  Après → reboot → écran SDDM → sélectionne "Hyprland"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  RACCOURCIS HYPRLAND AU PREMIER DÉMARRAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Super           → HyperBoard (dashboard principal)
+  Super + S       → HyperSettings (paramètres & apps)
+  Super + T       → Terminal Kitty
+  Super + A       → AXIOM (IA, branche le chargeur d'abord)
+  Super + B       → Firefox
+  Super + F1      → Monde Gaming
+  Super + F2      → Monde Cybersec
+  Super + F3      → Monde Prog/AI
+  Super + Q       → Fermer une fenêtre
+  Super + X       → Verrouiller l'écran
+  Print           → Screenshot zone (avec annotation)
+  Shift + Print   → Screenshot écran entier
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  SI QUELQUE CHOSE PLANTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  • install.py plante ?
+    → Relance simplement : python install.py
+    → Il reprend où ça s'est arrêté (state.json)
+
+  • GRUB ne montre pas Windows ?
+    → Dans Arch : sudo os-prober && sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+  • Hyprland ne démarre pas (écran noir) ?
+    → Ctrl+Alt+F2 → login → vérifier les logs :
+    → cat ~/.local/share/hyprland/hyprland.log | tail -30
+
+  • Pas de son ?
+    → systemctl --user start pipewire pipewire-pulse wireplumber
+
+  • WiFi ne fonctionne pas ?
+    → sudo systemctl start NetworkManager
+    → nmcli device wifi connect "NomWiFi" password "mdp"
+
+  • AXIOM ne répond pas ?
+    → Vérifie que le chargeur est branché (il se lance seulement sous secteur)
+    → systemctl --user start axiom.service
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  RÉSUMÉ DU DOSSIER MES FICHIERS SUR LA CLÉ VENTOY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  mes fichiers/
+  ├── gemma-4-E2B-it-Q4_K_M.gguf     ← modèle IA (2.9 GB) — déjà là ✓
+  └── INSTALL_GUIDE.txt               ← ce fichier
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  BON COURAGE RAYANE — HYPERWORLD T'ATTEND ! 🌌
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
