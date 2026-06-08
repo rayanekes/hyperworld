@@ -9,16 +9,26 @@ MODULE 09 — Stack IA AXIOM
 - Open Interpreter bridé — exécution autonome sécurisée
 - Service systemd AXIOM
 """
-import subprocess, os, venv, sys
+import subprocess, os, venv, sys, shutil, json
 from pathlib import Path
 
-REPO_ROOT = Path(os.environ.get("HYPERWORLD_ROOT", Path(__file__).parent.parent))
-HOME      = Path(os.environ.get("HYPERWORLD_HOME", Path.home()))
-USER      = os.environ.get("HYPERWORLD_USER", os.environ.get("USER", "rayane"))
-AXIOM_DIR = HOME / ".axiom"
-VENV_DIR  = AXIOM_DIR / "venv"
-PIP       = VENV_DIR / "bin" / "pip"
-PYTHON    = VENV_DIR / "bin" / "python"
+REPO_ROOT  = Path(os.environ.get("HYPERWORLD_ROOT", Path(__file__).parent.parent))
+HOME       = Path(os.environ.get("HYPERWORLD_HOME", Path.home()))
+USER       = os.environ.get("HYPERWORLD_USER", os.environ.get("USER", "rayane"))
+AXIOM_DIR  = HOME / ".axiom"
+VENV_DIR   = AXIOM_DIR / "venv"
+PIP        = VENV_DIR / "bin" / "pip"
+PYTHON     = VENV_DIR / "bin" / "python"
+MODELS_CFG = REPO_ROOT / "packages" / "models.json"
+
+# ── Chemins de recherche pour la clé Ventoy ───────────────────
+VENTOY_SEARCH_ROOTS = [
+    Path("/media") / USER / "Ventoy" / "mes fichiers",
+    Path("/media") / USER / "Ventoy",
+    Path("/media/rayane/Ventoy/mes fichiers"),
+    Path("/run/media") / USER / "Ventoy" / "mes fichiers",
+    Path("/mnt/ventoy") / "mes fichiers",
+]
 
 def run(cmd: str, check: bool = True):
     print(f"  $ {cmd}")
@@ -167,6 +177,74 @@ ACTION=="change", SUBSYSTEM=="power_supply", ATTR{{type}}=="Mains", ATTR{{online
     run("sudo udevadm control --reload-rules", check=False)
     print("  ✓ Activation AXIOM sous secteur configurée")
 
+def find_on_ventoy(filename: str) -> Path | None:
+    """Cherche un fichier sur la clé Ventoy dans les chemins connus."""
+    for root in VENTOY_SEARCH_ROOTS:
+        candidate = root / filename
+        if candidate.exists():
+            print(f"  💾 Trouvé sur clé : {candidate}")
+            return candidate
+    return None
+
+def get_models():
+    """
+    Télécharge ou copie les modèles IA.
+    Priorité : 1) Clé Ventoy locale  2) Téléchargement HuggingFace
+    """
+    print("\n  ── Modèles IA (Ventoy prioritaire) ──")
+
+    if not MODELS_CFG.exists():
+        print("  ⚠ packages/models.json introuvable, téléchargement ignoré")
+        return
+
+    with open(MODELS_CFG) as f:
+        cfg = json.load(f)
+
+    for model in cfg.get("models", []):
+        name        = model["name"]
+        destination = Path(model["destination"].replace("~", str(HOME)))
+        destination.mkdir(parents=True, exist_ok=True)
+        dest_file   = destination / name
+
+        # Déjà présent dans la destination finale ?
+        if dest_file.exists() and dest_file.stat().st_size > 1_000_000:
+            print(f"  ✓ {name} déjà présent dans {destination}")
+            continue
+
+        # 1ère tentative : chercher sur la clé Ventoy
+        local_name = model.get("local_source", name).split("/")[-1]
+        ventoy_path = find_on_ventoy(local_name)
+
+        if ventoy_path and model.get("prefer_local", True):
+            print(f"  📋 Copie depuis clé Ventoy : {local_name} → {dest_file}")
+            shutil.copy2(ventoy_path, dest_file)
+            size = dest_file.stat().st_size / 1e9
+            print(f"  ✓ {name} copié ({size:.2f} GB)")
+            continue
+
+        # 2ème tentative : téléchargement
+        url = model.get("url", "")
+        if not url:
+            print(f"  ⚠ {name} : pas d'URL de téléchargement, ignoré")
+            continue
+
+        size_gb = model.get("size_gb", 0)
+        print(f"  ↓ Téléchargement {name} ({size_gb} GB) ...")
+        result = subprocess.run(
+            ["wget", "--continue", "--show-progress", "-O", str(dest_file), url],
+            check=False
+        )
+        if result.returncode == 0 and dest_file.exists():
+            print(f"  ✓ {name} téléchargé ({dest_file.stat().st_size / 1e9:.2f} GB)")
+        else:
+            print(f"  ✗ Échec {name}.")
+            fallback = model.get("fallback_url", "")
+            if fallback:
+                print(f"     Télécharge manuellement depuis : {fallback}")
+                print(f"     Puis copie dans : {destination}")
+            if dest_file.exists() and dest_file.stat().st_size < 1_000_000:
+                dest_file.unlink()  # supprimer le fichier incomplet
+
 if __name__ == "__main__":
     print("\n  ═══ MODULE 09 : STACK IA AXIOM ═══\n")
     create_axiom_dirs()
@@ -179,6 +257,7 @@ if __name__ == "__main__":
     install_open_interpreter()
     install_misc_deps()
     deploy_axiom_files()
+    get_models()                # ← copie depuis Ventoy ou télécharge
     create_systemd_service()
     create_power_activation()
-    print("\n  ✓ Stack AXIOM installée — modèles à télécharger séparément")
+    print("\n  ✓ Stack AXIOM installée et modèles en place !")
