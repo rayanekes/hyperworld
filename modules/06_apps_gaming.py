@@ -9,6 +9,10 @@ MODULE 06 — Applications Monde Gaming
 """
 import subprocess, os
 from pathlib import Path
+# NOTE P2-3 : packages/gaming.txt est la liste de référence documentaire.
+# Les listes ci-dessous sont les paquets réellement installés (peuvent différer).
+# Mise à jour manuelle si tu ajoutes des outils : édite AUSSI packages/gaming.txt.
+
 
 HOME = Path(os.environ.get("HYPERWORLD_HOME", Path.home()))
 

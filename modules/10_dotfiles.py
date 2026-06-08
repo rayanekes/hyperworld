@@ -17,10 +17,14 @@ def run(cmd: str, check: bool = True):
     subprocess.run(cmd, shell=True, check=check)
 
 def symlink(src: Path, dst: Path):
-    """Crée un symlink dst → src. Remplace si existant."""
+    """Crée un symlink dst → src. Remplace si existant (fichier, symlink ou dossier)."""
     dst.parent.mkdir(parents=True, exist_ok=True)
     if dst.exists() or dst.is_symlink():
-        dst.unlink()
+        if dst.is_dir() and not dst.is_symlink():
+            # Dossier réel (ex: ~/.config/kitty/ créé manuellement) — suppression sécurisée
+            shutil.rmtree(dst)
+        else:
+            dst.unlink()
     dst.symlink_to(src)
     print(f"  ✓  {dst} → {src}")
 

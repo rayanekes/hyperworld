@@ -6,6 +6,10 @@ Réseau, Reverse Engineering, Exploitation, OSINT
 """
 import subprocess, os
 from pathlib import Path
+# NOTE P2-3 : packages/cybersec.txt est la liste de référence documentaire.
+# Les listes ci-dessous sont les paquets réellement installés (peuvent différer).
+# Mise à jour manuelle si tu ajoutes des outils : édite AUSSI packages/cybersec.txt.
+
 
 HOME = Path(os.environ.get("HYPERWORLD_HOME", Path.home()))
 USER = os.environ.get("HYPERWORLD_USER", os.environ.get("USER", "rayane"))
@@ -55,7 +59,15 @@ def install_anonymity():
 
 def install_python_tools():
     print("\n  ── Python Security Tools ──")
-    run("pip install --user scapy impacket pwntools requests beautifulsoup4", check=False)
+    # PEP 668 : pas de pip global sur Arch — utiliser pacman quand disponible
+    pacman_pkgs = ["python-requests", "python-beautifulsoup4", "python-scapy"]
+    run(f"sudo pacman -S --noconfirm --needed {' '.join(pacman_pkgs)}", check=False)
+    # impacket et pwntools non dispo dans les repos officiels → venv isolé
+    venv_dir = HOME / ".axiom" / "cybersec-venv"
+    if not venv_dir.exists():
+        run(f"python -m venv {venv_dir}", check=False)
+    run(f"{venv_dir}/bin/pip install impacket pwntools", check=False)
+    print(f"  ✓ Outils Python sécurité installés (venv : {venv_dir})")
 
 if __name__ == "__main__":
     print("\n  ═══ MODULE 07 : CYBERSÉCURITÉ ═══\n")
