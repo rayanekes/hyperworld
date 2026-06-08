@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HYPERBOARD</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     HYPERBOARD — Dashboard HYPERWORLD
+     Structure :
+     ┌─────────┬─────────────────────┬─────────┐
+     │  LEFT   │      CENTER         │  RIGHT  │
+     │ Launcher│ Clock + News + Games│ Stats   │
+     └─────────┴─────────────────────┴─────────┘
+════════════════════════════════════════════════════════ -->
+
+<!-- Fond animé avec particules -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- Overlay principal -->
+<div id="board" class="board">
+
+  <!-- ── COLONNE GAUCHE — Lanceur d'apps ── -->
+  <aside class="panel panel-left">
+    <!-- Monde actif -->
+    <div class="world-indicator">
+      <span id="world-emoji">🔬</span>
+      <div>
+        <div id="world-name" class="world-name">DEEP SPACE</div>
+        <div class="world-sub">Monde actif</div>
+      </div>
+    </div>
+
+    <!-- Switcher de mondes -->
+    <div class="world-switcher">
+      <button class="world-btn" onclick="switchWorld('gaming')" data-world="gaming">
+        <span class="w-emoji">🎮</span>
+        <div>
+          <div class="w-name">GAMING</div>
+          <div class="w-sub">Circuit Noir</div>
+        </div>
+      </button>
+      <button class="world-btn" onclick="switchWorld('cybersec')" data-world="cybersec">
+        <span class="w-emoji">🛡️</span>
+        <div>
+          <div class="w-name">CYBERSEC</div>
+          <div class="w-sub">Ghost Protocol</div>
+        </div>
+      </button>
+      <button class="world-btn active" onclick="switchWorld('prog')" data-world="prog">
+        <span class="w-emoji">🔬</span>
+        <div>
+          <div class="w-name">PROG / AI</div>
+          <div class="w-sub">Deep Space IDE</div>
+        </div>
+      </button>
+    </div>
+
+    <!-- AXIOM -->
+    <div class="axiom-card" onclick="launchAxiom()">
+      <div class="axiom-pulse"></div>
+      <div class="axiom-info">
+        <div class="axiom-name">AXIOM</div>
+        <div id="axiom-status" class="axiom-status">Vérification...</div>
+      </div>
+      <div class="axiom-icon">🤖</div>
+    </div>
+
+    <!-- Apps rapides (par monde) -->
+    <div class="quick-apps">
+      <div class="section-title">APPS RAPIDES</div>
+      <div id="app-grid" class="app-grid">
+        <!-- Peuplé dynamiquement -->
+      </div>
+    </div>
+
+    <!-- Musique -->
+    <div class="music-card" id="music-card">
+      <div class="music-icon">🎵</div>
+      <div class="music-info">
+        <div id="music-title" class="music-title">Aucune musique</div>
+        <div id="music-artist" class="music-artist">—</div>
+      </div>
+      <div class="music-controls">
+        <button onclick="mediaCmd('previous')">⏮</button>
+        <button id="play-btn" onclick="mediaCmd('play-pause')">⏸</button>
+        <button onclick="mediaCmd('next')">⏭</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── COLONNE CENTRE ── -->
+  <main class="panel panel-center">
+
+    <!-- Horloge premium -->
+    <div class="clock-container">
+      <div id="clock-time" class="clock-time">00:00:00</div>
+      <div id="clock-date" class="clock-date">Chargement...</div>
+    </div>
+
+    <!-- Météo -->
+    <div class="weather-card">
+      <div id="weather-icon" class="weather-icon">🌤️</div>
+      <div class="weather-info">
+        <div id="weather-temp" class="weather-temp">—°C</div>
+        <div id="weather-desc" class="weather-desc">Chargement...</div>
+      </div>
+      <div class="weather-details">
+        <span id="weather-feels">Ressenti : —°</span>
+        <span id="weather-humidity">💧 —%</span>
+      </div>
+    </div>
+
+    <!-- Actualités Tech -->
+    <div class="news-section">
+      <div class="section-title">
+        <span>📰 ACTUALITÉS TECH</span>
+        <span class="news-source">Hacker News</span>
+      </div>
+      <div id="news-list" class="news-list">
+        <div class="news-loading">
+          <div class="spinner"></div>
+          <span>Chargement des actualités...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jeux recommandés -->
+    <div class="games-section">
+      <div class="section-title">
+        <span>🎮 JEUX DU MOMENT</span>
+        <span class="games-sub">Pour ce monde</span>
+      </div>
+      <div id="games-grid" class="games-grid">
+        <!-- Peuplé dynamiquement -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── COLONNE DROITE — Stats système ── -->
+  <aside class="panel panel-right">
+
+    <!-- Stats système -->
+    <div class="section-title">⚡ SYSTÈME</div>
+
+    <div class="stat-block">
+      <div class="stat-label">CPU <span id="cpu-val" class="stat-val">—%</span></div>
+      <div class="stat-bar"><div id="cpu-bar" class="stat-fill cpu-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="stat-block">
+      <div class="stat-label">RAM <span id="ram-val" class="stat-val">—</span></div>
+      <div class="stat-bar"><div id="ram-bar" class="stat-fill ram-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="stat-block">
+      <div class="stat-label">GPU Temp <span id="gpu-temp" class="stat-val">—°C</span></div>
+      <div class="stat-bar"><div id="gpu-bar" class="stat-fill gpu-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="stat-block">
+      <div class="stat-label">GPU <span id="gpu-val" class="stat-val">—%</span></div>
+      <div class="stat-bar"><div id="gpu-use-bar" class="stat-fill gpu-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="stat-block">
+      <div class="stat-label">Disque <span id="disk-val" class="stat-val">—%</span></div>
+      <div class="stat-bar"><div id="disk-bar" class="stat-fill disk-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Batterie -->
+    <div id="battery-card" class="battery-card" style="display:none">
+      <span id="bat-icon">🔋</span>
+      <span id="bat-pct" class="bat-pct">—%</span>
+      <div class="stat-bar" style="flex:1">
+        <div id="bat-bar" class="stat-fill bat-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- VRAM -->
+    <div class="vram-card">
+      <div class="section-title" style="margin-top:8px">🎯 VRAM RTX 4050</div>
+      <div id="vram-text" class="vram-text">—</div>
+    </div>
+
+    <!-- Raccourcis clavier -->
+    <div class="shortcuts-card">
+      <div class="section-title" style="margin-top:16px">⌨️ RACCOURCIS</div>
+      <div class="shortcut-list">
+        <div class="shortcut-item"><kbd>Super+F1</kbd><span>Gaming</span></div>
+        <div class="shortcut-item"><kbd>Super+F2</kbd><span>Cybersec</span></div>
+        <div class="shortcut-item"><kbd>Super+F3</kbd><span>Prog</span></div>
+        <div class="shortcut-item"><kbd>Super+A</kbd><span>AXIOM</span></div>
+        <div class="shortcut-item"><kbd>Super+T</kbd><span>Terminal</span></div>
+        <div class="shortcut-item"><kbd>Super+Q</kbd><span>Fermer</span></div>
+        <div class="shortcut-item"><kbd>Super+X</kbd><span>Verrouiller</span></div>
+        <div class="shortcut-item"><kbd>Escape</kbd><span>Fermer board</span></div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- Bouton fermer -->
+  <button class="close-btn" onclick="closeBoard()">✕</button>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -186,6 +186,37 @@ def deploy_hypridle():
     if src.exists():
         symlink(src, dst)
 
+def deploy_hyperboard():
+    """Déploie HyperBoard (dashboard Super key) dans ~/.config/hypr/hyperboard/"""
+    print("\n  ── HyperBoard dashboard ──")
+    src_dir = REPO_ROOT / "dotfiles" / "hyperboard"
+    dst_dir = CONFIG / "hypr" / "hyperboard"
+    dst_dir.mkdir(parents=True, exist_ok=True)
+    if src_dir.exists():
+        for f in src_dir.iterdir():
+            if f.is_file():
+                symlink(f, dst_dir / f.name)
+        print("  ✓ HyperBoard déployé → ~/.config/hypr/hyperboard/")
+    else:
+        print("  ⚠ Dossier hyperboard introuvable")
+
+def deploy_swappy():
+    """Déploie la config swappy pour les screenshots"""
+    print("\n  ── swappy config ──")
+    src = REPO_ROOT / "dotfiles" / "swappy" / "config"
+    dst_dir = CONFIG / "swappy"
+    dst_dir.mkdir(parents=True, exist_ok=True)
+    dst = dst_dir / "config"
+    if src.exists():
+        symlink(src, dst)
+        # Créer le dossier de screenshots
+        screenshots_dir = HOME / "Pictures" / "Screenshots"
+        screenshots_dir.mkdir(parents=True, exist_ok=True)
+        print(f"  ✓ swappy configuré → {dst}")
+        print(f"  ✓ Dossier screenshots : {screenshots_dir}")
+    else:
+        print("  ⚠ config swappy introuvable")
+
 if __name__ == "__main__":
     print("\n  ═══ MODULE 10 : DÉPLOIEMENT DOTFILES ═══\n")
     deploy_hyprland()
@@ -198,7 +229,10 @@ if __name__ == "__main__":
     deploy_zshrc()
     deploy_hyprlock()
     deploy_hypridle()
+    deploy_hyperboard()
+    deploy_swappy()
     configure_path()
     configure_starship()
     deploy_wallpapers()
     print("\n  ✓ Tous les dotfiles déployés via symlinks !")
+

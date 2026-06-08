@@ -59,25 +59,97 @@ setopt HIST_IGNORE_SPACE
 setopt SHARE_HISTORY
 setopt EXTENDED_HISTORY
 
-# ── Completion ────────────────────────────────────────────
-autoload -Uz compinit && compinit
-zstyle ':completion:*' menu select
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+# ══════════════════════════════════════════════════════════
+#  COMPLÉTION INTELLIGENTE — fzf-tab + zstyle premium
+#  100× mieux que la complétion Pop OS
+# ══════════════════════════════════════════════════════════
+
+autoload -Uz compinit
+# Régénère compinit seulement si nécessaire (rapide)
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+else
+    compinit -C
+fi
+
+# ── fzf-tab : remplace Tab par un menu fzf interactif ─────
+# (installé via : paru -S zsh-fzf-tab)
+[[ -f /usr/share/fzf-tab/fzf-tab.plugin.zsh ]] && \
+    source /usr/share/fzf-tab/fzf-tab.plugin.zsh
+
+# ── Apparence de la complétion ────────────────────────────
+zstyle ':completion:*'              menu               no  # fzf-tab gère ça
+zstyle ':completion:*'              list-colors        "${(s.:.)LS_COLORS}"
+zstyle ':completion:*'              matcher-list       '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*'              group-name         ''
+zstyle ':completion:*:descriptions' format             '[%d]'
+zstyle ':completion:*:messages'     format             '%d'
+zstyle ':completion:*:warnings'     format             'Rien trouvé : %d'
+zstyle ':completion:*'              special-dirs       true
+zstyle ':completion:*'              squeeze-slashes    true
+zstyle ':completion:*'              use-cache          true
+zstyle ':completion:*'              cache-path         "$HOME/.zsh/cache"
+
+# ── fzf-tab : aperçus riches ─────────────────────────────
+# Aperçu des fichiers avec bat
+zstyle ':fzf-tab:complete:*' fzf-preview \
+    'if [[ -d $realpath ]]; then eza --tree --level=2 --icons --color=always $realpath; elif [[ -f $realpath ]]; then bat --color=always --line-range=:60 $realpath 2>/dev/null || cat $realpath; fi'
+
+# Aperçu des processus kill
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+    '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-header -w -w'
+
+# Aperçu des variables d'env
+zstyle ':fzf-tab:complete:(-command-|-parameter-|-brace-parameter-|export|unset|expand):*' fzf-preview \
+    'echo ${(P)word}'
+
+# Aperçu des commandes systemd
+zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview \
+    'SYSTEMD_COLORS=1 systemctl status $word'
+
+# Options fzf pour fzf-tab
+zstyle ':fzf-tab:*' fzf-flags \
+    '--height=60%' '--border=rounded' '--layout=reverse' \
+    '--color=bg+:#1e2030,bg:#0d1117,hl:#FF8C42,fg:#CDD9E5,header:#484F58,info:#2DD4BF,pointer:#A78BFA,marker:#A78BFA,fg+:#E6EDF3,prompt:#A78BFA,hl+:#FF8C42' \
+    '--preview-window=right:50%:wrap'
+
+# Accepter avec Entrée, ouvrir sous-menu avec Tab
+zstyle ':fzf-tab:*' switch-group ',' '.'
 
 # ── Zoxide (cd intelligent) ───────────────────────────────
 command -v zoxide &>/dev/null && eval "$(zoxide init zsh --cmd cd)"
 
-# ── FZF ───────────────────────────────────────────────────
-[[ -f /usr/share/fzf/key-bindings.zsh ]]  && source /usr/share/fzf/key-bindings.zsh
-[[ -f /usr/share/fzf/completion.zsh ]]    && source /usr/share/fzf/completion.zsh
+# ── FZF keybinds et config ───────────────────────────────
+[[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
+[[ -f /usr/share/fzf/completion.zsh ]]   && source /usr/share/fzf/completion.zsh
+
 export FZF_DEFAULT_OPTS="
     --color=bg+:#1e2030,bg:#0d1117,spinner:#A78BFA,hl:#FF8C42
     --color=fg:#CDD9E5,header:#484F58,info:#2DD4BF,pointer:#A78BFA
     --color=marker:#A78BFA,fg+:#E6EDF3,prompt:#A78BFA,hl+:#FF8C42
-    --height 40% --border rounded --layout reverse
-"
-export FZF_CTRL_T_OPTS="--preview 'bat --color=always {}' --preview-window=right:50%"
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
+    --height 55% --border rounded --layout reverse --info inline
+    --bind 'ctrl-/:toggle-preview'
+    --bind 'ctrl-u:preview-page-up,ctrl-d:preview-page-down'"
+
+# Ctrl+T : chercher fichiers avec aperçu bat
+export FZF_CTRL_T_OPTS="
+    --preview 'bat --color=always --line-range=:80 {}'
+    --preview-window=right:55%:wrap
+    --header 'Ctrl+/ : toggle aperçu'"
+
+# Ctrl+R : historique avec aperçu commande
+export FZF_CTRL_R_OPTS="
+    --preview 'echo {}' --preview-window=down:3:wrap
+    --bind 'ctrl-y:execute-silent(echo -n {2..} | wl-copy)'
+    --color header:italic --header 'Ctrl+Y: copier la commande'"
+
+# Alt+C : naviguer les dossiers avec aperçu eza
+export FZF_ALT_C_OPTS="
+    --preview 'eza --tree --level=2 --icons --color=always {}'
+    --preview-window=right:50%"
+
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git --exclude __pycache__ --exclude .venv'
+export FZF_ALT_C_COMMAND='fd --type d --hidden --exclude .git'
 
 # ══════════════════════════════════════════════════════════
 #  ALIAS — Organisation par catégorie

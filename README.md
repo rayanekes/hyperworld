@@ -5,7 +5,7 @@
 ## 🚀 Installation en une commande
 
 ```bash
-git clone https://github.com/TON_USERNAME/hyperworld.git ~/hyperworld
+git clone https://github.com/rayanekes/hyperworld.git ~/hyperworld
 cd ~/hyperworld
 python install.py
 ```

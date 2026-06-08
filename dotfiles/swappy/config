@@ -1,0 +1,7 @@
+[Default]
+save-dir=$HOME/Pictures/Screenshots
+save-filename-format=%Y%m%d-%Hh%Mm%Ss
+default-action=save-clipboard
+annotation-path=$HOME/Pictures/Screenshots
+copy-and-close=true
+show-panel=true

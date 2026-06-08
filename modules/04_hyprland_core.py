@@ -32,7 +32,7 @@ def install_hyprland_stack():
         "gtk3", "gtk4", "gvfs", "gvfs-mtp",
         "thunar", "thunar-archive-plugin",
         "wl-clipboard", "cliphist",
-        "grim", "slurp", "swappy",
+        "grim", "slurp", "swappy", "imv",
     ]
     run(f"sudo pacman -S --noconfirm --needed {' '.join(pkgs)}", check=False)
 
@@ -112,13 +112,27 @@ def configure_zsh():
     print("\n  ── ZSH + Oh-My-Zsh + plugins ──")
     run("sudo pacman -S --noconfirm --needed zsh", check=False)
     run("paru -S --noconfirm --needed zsh-autosuggestions zsh-syntax-highlighting", check=False)
+    # fzf-tab : complétion intelligente (100× mieux que la complétion basique)
+    run("paru -S --noconfirm --needed zsh-fzf-tab", check=False)
     # Changer le shell par défaut
     run(f"sudo chsh -s /bin/zsh {USER}", check=False)
     # Installer Oh-My-Zsh silencieusement
     result = subprocess.run("test -d ~/.oh-my-zsh", shell=True)
     if result.returncode != 0:
         run('sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended', check=False)
-    print("  ✓ ZSH configuré")
+    print("  ✓ ZSH + fzf-tab configurés")
+
+def install_hyperboard_deps():
+    print("\n  ── HyperBoard deps (GTK4 + WebKit) ──")
+    pkgs = [
+        "python-gobject",
+        "webkit2gtk-4.1",
+        "gtk-layer-shell",
+        "libadwaita",
+    ]
+    run(f"sudo pacman -S --noconfirm --needed {' '.join(pkgs)}", check=False)
+    run("pip install --user psutil requests", check=False)
+    print("  ✓ HyperBoard deps installées")
 
 if __name__ == "__main__":
     print("\n  ═══ MODULE 04 : HYPRLAND CORE ═══\n")
@@ -129,4 +143,5 @@ if __name__ == "__main__":
     install_utils()
     configure_hyprland_session()
     configure_zsh()
+    install_hyperboard_deps()
     print("\n  ✓ Stack Hyprland + Wayland installée !")

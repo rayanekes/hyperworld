@@ -152,7 +152,7 @@ fi
 # ── Étape 6 : Cloner / mettre à jour le repo ─────────────
 echo -e "\n${BOLD}  [6/7] Récupération du repo HYPERWORLD${R}"
 REPO_DIR="$HOME/hyperworld"
-REPO_URL="https://github.com/TON_USERNAME/hyperworld.git"
+REPO_URL="https://github.com/rayanekes/hyperworld.git"
 
 if [[ -d "$REPO_DIR/.git" ]]; then
     info "Repo déjà cloné, mise à jour..."
@@ -163,7 +163,7 @@ elif [[ -d "$REPO_DIR" && -f "$REPO_DIR/install.py" ]]; then
     ok "Utilisation des fichiers existants"
 else
     info "Clonage depuis $REPO_URL..."
-    if [[ "$REPO_URL" == *"TON_USERNAME"* ]]; then
+    if [[ "$REPO_URL" == *"rayanekes"* ]]; then
         warn "URL du repo non configurée !"
         echo -e "\n  ${MAG}Entre l'URL de ton repo GitHub :${R}"
         read -rp "  URL : " REPO_URL
