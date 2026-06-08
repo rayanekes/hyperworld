@@ -76,7 +76,8 @@ def install_wayland_packages():
     # Séparer les paquets AUR (commentés dans le fichier)
     pacman_pkgs = [p for p in pkgs if p]
     if pacman_pkgs:
-        run(f"sudo pacman -S --noconfirm --needed {' '.join(pacman_pkgs)}", check=False)
+        # Bug 3 fix : paru gère à la fois les repos officiels et AUR
+        run(f"paru -S --noconfirm --needed {' '.join(pacman_pkgs)}", check=False)
 
 def enable_services():
     print("\n  ── Activation des services système ──")

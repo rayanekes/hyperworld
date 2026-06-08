@@ -166,16 +166,35 @@ WantedBy=default.target
     print("  ✓ Service AXIOM enregistré (démarrage automatique sous secteur)")
 
 def create_power_activation():
-    print("\n  ── Règle udev activation AXIOM sous secteur ──")
-    rule = f"""# HYPERWORLD — Lance AXIOM quand on branche le chargeur
-ACTION=="change", SUBSYSTEM=="power_supply", ATTR{{type}}=="Mains", ATTR{{online}}=="1", RUN+="/bin/systemctl --user start axiom.service"
-ACTION=="change", SUBSYSTEM=="power_supply", ATTR{{type}}=="Mains", ATTR{{online}}=="0", RUN+="/bin/systemctl --user stop axiom.service"
+    print("\n  ── Activation AXIOM sous secteur (relay script) ──")
+    # NOTE CRITIQUE : udev tourne en root sans XDG_RUNTIME_DIR ni D-Bus.
+    # systemctl --user échoue TOUJOURS depuis une règle udev directe.
+    # Solution : script intermédiaire qui retrouve la session utilisateur.
+    USER_NAME = USER
+    script = f"""#!/usr/bin/env bash
+USER_NAME="{USER}"
+UID_NUM=$(id -u "$USER_NAME" 2>/dev/null) || exit 1
+XDGR="/run/user/$UID_NUM"
+DBUS=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/$(pgrep -u "$UID_NUM" Hyprland | head -1)/environ 2>/dev/null | tr '\\0' '\\n' | grep DBUS | cut -d= -f2-)
+export XDG_RUNTIME_DIR="$XDGR" DBUS_SESSION_BUS_ADDRESS="$DBUS"
+[ "$1" = "start" ] && su - "$USER_NAME" -c "systemctl --user start axiom.service" || true
+[ "$1" = "stop"  ] && su - "$USER_NAME" -c "systemctl --user stop  axiom.service" || true
 """
-    tmp = Path("/tmp/99-axiom-power.rules")
-    tmp.write_text(rule)
+    relay = Path("/usr/local/bin/axiom-power-relay.sh")
+    tmp_s = Path("/tmp/axiom-power-relay.sh")
+    tmp_s.write_text(script)
+    run(f"sudo mv {tmp_s} {relay}")
+    run(f"sudo chmod +x {relay}")
+
+    rule = f"""# HYPERWORLD — Activation AXIOM sur secteur
+ACTION=="change", SUBSYSTEM=="power_supply", ATTR{{type}}=="Mains", ATTR{{online}}=="1", RUN+="{relay} start"
+ACTION=="change", SUBSYSTEM=="power_supply", ATTR{{type}}=="Mains", ATTR{{online}}=="0", RUN+="{relay} stop"
+"""
+    tmp_r = Path("/tmp/99-axiom-power.rules")
+    tmp_r.write_text(rule)
     run("sudo mv /tmp/99-axiom-power.rules /etc/udev/rules.d/")
     run("sudo udevadm control --reload-rules", check=False)
-    print("  ✓ Activation AXIOM sous secteur configurée")
+    print("  ✓ Activation AXIOM sous secteur configurée (via relay script)")
 
 def find_on_ventoy(filename: str) -> Path | None:
     """Cherche un fichier sur la clé Ventoy dans les chemins connus."""

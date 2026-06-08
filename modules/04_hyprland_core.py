@@ -131,7 +131,8 @@ def install_hyperboard_deps():
         "libadwaita",
     ]
     run(f"sudo pacman -S --noconfirm --needed {' '.join(pkgs)}", check=False)
-    run("pip install --user psutil requests", check=False)
+    # PEP 668 : pas de pip hors venv sur Arch — utiliser pacman
+    run("sudo pacman -S --noconfirm --needed python-psutil python-requests", check=False)
     print("  ✓ HyperBoard deps installées")
 
 if __name__ == "__main__":

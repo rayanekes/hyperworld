@@ -8,7 +8,7 @@ MODULE 02 — Pilotes NVIDIA RTX 4050
 - Optimisations performances GPU
 """
 
-import subprocess, os
+import subprocess, os, re
 from pathlib import Path
 
 HOME = Path(os.environ.get("HYPERWORLD_HOME", Path.home()))
@@ -54,29 +54,27 @@ def configure_drm_modeset():
     loader_entries = Path("/boot/loader/entries")
     if loader_entries.exists():
         for entry in loader_entries.glob("*.conf"):
-            content = entry.read_text()
-            if "nvidia-drm.modeset" not in content:
-                if "options" in content:
-                    content = content.replace(
-                        "options",
-                        "options nvidia-drm.modeset=1"
-                    )
+            txt = entry.read_text()
+            if "nvidia-drm.modeset" not in txt:
+                # Injecter après "options" sur la même ligne
+                txt = re.sub(r"^(options\s+)", r"\1nvidia-drm.modeset=1 ", txt, flags=re.MULTILINE)
                 tmp = Path(f"/tmp/{entry.name}.new")
-                tmp.write_text(content)
+                tmp.write_text(txt)
                 run(f"sudo mv {tmp} {entry}")
         print("  ✓ DRM modeset activé dans systemd-boot")
     else:
-        # GRUB fallback
+        # GRUB fallback — regex robuste, indépendante du contenu existant
         grub_default = Path("/etc/default/grub")
         if grub_default.exists():
-            content = grub_default.read_text()
-            if "nvidia-drm.modeset" not in content:
-                content = content.replace(
-                    'GRUB_CMDLINE_LINUX_DEFAULT="quiet',
-                    'GRUB_CMDLINE_LINUX_DEFAULT="quiet nvidia-drm.modeset=1'
+            txt = grub_default.read_text()
+            if "nvidia-drm.modeset" not in txt:
+                txt = re.sub(
+                    r'(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*?)(")',
+                    lambda m: m.group(1) + " nvidia-drm.modeset=1" + m.group(2),
+                    txt
                 )
                 tmp = Path("/tmp/grub.new")
-                tmp.write_text(content)
+                tmp.write_text(txt)
                 run("sudo mv /tmp/grub.new /etc/default/grub")
                 run("sudo grub-mkconfig -o /boot/grub/grub.cfg", check=False)
             print("  ✓ DRM modeset activé dans GRUB")

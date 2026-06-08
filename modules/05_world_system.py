@@ -144,7 +144,7 @@ CHOICE=$(echo "$WINDOWS" | rofi \\
 
 if [ -n "$CHOICE" ]; then
     # Extraire le workspace et focus la fenêtre
-    WS=$(echo "$CHOICE" | grep -oP 'WS\K[0-9]+')
+    WS=$(echo "$CHOICE" | grep -oP 'WS[0-9]+' | grep -oP '[0-9]+')
     TITLE=$(echo "$CHOICE" | sed 's/.*| //')
     
     if [ -n "$WS" ]; then
