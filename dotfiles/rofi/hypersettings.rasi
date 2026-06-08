@@ -1,0 +1,80 @@
+/* ═══════════════════════════════════════════════════════════
+   HYPERWORLD — hypersettings.rasi
+   Thème Rofi premium pour le centre de contrôle
+   ═══════════════════════════════════════════════════════════ */
+
+@import "global-overview.rasi"
+
+/* Override pour un look "Settings App" plus large */
+window {
+    width:           680px;
+    border-radius:   20px;
+    border:          2px solid rgba(167, 139, 250, 0.30);
+    background-color: rgba(8, 4, 18, 0.97);
+}
+
+inputbar {
+    padding:         12px 18px;
+    background-color: rgba(22, 28, 38, 0.9);
+    border-radius:   12px 12px 0 0;
+    border:          0 0 1px 0;
+    border-color:    rgba(167, 139, 250, 0.15);
+}
+
+prompt {
+    color:           #A78BFA;
+    font:            "Orbitron Bold" 13px;
+    letter-spacing:  2px;
+}
+
+entry {
+    color:           #E6EDF3;
+    placeholder:     "Chercher un paramètre...";
+    placeholder-color: rgba(230, 237, 243, 0.30);
+}
+
+listview {
+    lines:           12;
+    scrollbar:       true;
+    padding:         8px;
+    spacing:         2px;
+}
+
+element {
+    padding:         10px 16px;
+    border-radius:   10px;
+    background-color: transparent;
+    spacing:         14px;
+    cursor:          pointer;
+}
+
+element selected {
+    background-color: rgba(167, 139, 250, 0.15);
+    border:          1px solid rgba(167, 139, 250, 0.40);
+}
+
+element-text {
+    color:           #E6EDF3;
+    font:            "Inter Regular" 13px;
+    vertical-align:  0.5;
+    highlight:       bold #A78BFA;
+}
+
+element selected > element-text {
+    color:           #FFFFFF;
+    font:            "Inter SemiBold" 13px;
+}
+
+scrollbar {
+    width:           4px;
+    background-color: transparent;
+    handle-color:    rgba(167, 139, 250, 0.4);
+    handle-width:    4px;
+    border-radius:   2px;
+}
+
+/* Compteur résultats */
+case-indicator {
+    color:           rgba(167, 139, 250, 0.5);
+    font:            "JetBrains Mono Regular" 10px;
+}

@@ -35,6 +35,7 @@ MODULES = [
     ("09_ai_stack",       "Stack IA AXIOM (llama-cpp-python)"),
     ("10_dotfiles",       "Déploiement de tous les dotfiles"),
     ("11_finalize",       "Finalisation + services systemd"),
+    ("11b_control_center", "Centre de contrôle (Store, Permissions, Paramètres)"),
 ]
 
 C = {
